@@ -6,6 +6,15 @@
 
 using namespace std;
 
+// declare functions
+int get_size_of_os_pointer();
+int get_block_size(int bytes_in_struct);
+void get_new_block();
+int64_t memmg_to_virtual(MEMMG_TYPE *ptr);
+MEMMG_TYPE *memmg_reference(char *small_pointer);
+
+
+// globals
 const vector<void *> virtual_memory_blocks;
 int free_block_position = 0;
 
@@ -53,7 +62,7 @@ void get_new_block(){
         vector of block pointers virtual_memory_blocks.
 
     ***/
-    new_block * = malloc(get_block_size(MEMMG_WIDTH * 4))
+     void * new_block = malloc(get_block_size(MEMMG_WIDTH * 4));
 
     virtual_memory_blocks.push_back (new_block);   // adds new_block to end of vector
 }
