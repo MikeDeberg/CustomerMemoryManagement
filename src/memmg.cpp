@@ -15,7 +15,7 @@ MEMMG_TYPE *memmg_reference(char *small_pointer);
 
 
 // globals
-const vector<void *> virtual_memory_blocks;
+vector<const void *> virtual_memory_blocks;
 int free_block_position = 0;
 
 int get_block_size(int bytes_in_struct) {
