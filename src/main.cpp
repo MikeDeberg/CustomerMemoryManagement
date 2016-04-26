@@ -1,14 +1,11 @@
-// #define MEMMG_WIDTH 5
-// #define MEMMG_TYPE Node
-// #include "memmg.h"
-
-
 #include <iostream>
 #include <fstream>
 
 // Project Specific
+#include "definitions.h"
 #include "compactPointer.h"
 #include "trie.h"
+#include "memmg.h"
 
 using namespace std;
 

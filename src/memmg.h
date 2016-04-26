@@ -6,6 +6,9 @@
  * instead place it directly in any structs.
  */
 
+#include "definitions.h"
+
+
 void * memmg_alloc();
 
 class MemmgPointer {
@@ -14,5 +17,5 @@ public:
     MEMMG_TYPE & operator* ();
     MEMMG_TYPE * operator-> ();
 private:
-    char[MEMMG_WIDTH] _pointer;
+    char *_pointer;
 };
