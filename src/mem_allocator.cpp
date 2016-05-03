@@ -66,7 +66,7 @@ uint64_t MemoryAllocator::allocate() {
 void *MemoryAllocator::reference(uint64_t virt_ptr) {
     if (!virt_ptr)
         return NULL;
-    uint64_t block_id = (virt_ptr - 1) / structs_per_block;
+    uint64_t block_id = ((uint64_t) (virt_ptr - ((uint64_t) 1))) / structs_per_block;
     uint64_t struct_id = virt_ptr % structs_per_block;
     try{
         return blocks.at(block_id)->get_reference_of(struct_id);

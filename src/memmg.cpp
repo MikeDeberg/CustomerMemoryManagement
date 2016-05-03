@@ -17,7 +17,7 @@ MEMMG_TYPE *memmg_reference(unsigned char *small_pointer) {
     // convert the virtual pointer into a reference, use MEMMG_WIDTH to
     // determine how far to read in the small_pointer.
     uint64_t virtual_address;
-    int i;
+    unsigned int i;
 
     virtual_address = 0;
     for(i=0; i<MEMMG_WIDTH; i++) {
@@ -27,7 +27,7 @@ MEMMG_TYPE *memmg_reference(unsigned char *small_pointer) {
 }
 
 memmg_ptr::memmg_ptr() {
-    int i;
+    unsigned int i;
     for(i=0; i<MEMMG_WIDTH; i++) {
         *(_pointer + i) = 0;
     }
@@ -36,7 +36,7 @@ memmg_ptr::memmg_ptr() {
 memmg_ptr::memmg_ptr(uint64_t virtual_address) {
     // do some bitmasking here to apply the virtual_address to the _pointer
     // array
-    int i;
+    unsigned int i;
     for(i=0; i<MEMMG_WIDTH; i++) {
         _pointer[i] = (0xFF & (virtual_address >> (i * 8)));
     }
