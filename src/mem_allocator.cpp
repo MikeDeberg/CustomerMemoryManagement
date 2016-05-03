@@ -8,7 +8,7 @@
 
 using namespace std;
 
-Block::Block(uint64_t addr, int max, int size) {
+Block::Block(uint64_t addr, unsigned int max, unsigned int size) {
     root_addr = addr;
     max_count = max;
     struct_size = size;
@@ -29,14 +29,14 @@ uint64_t Block::get_next_addr() {
     return root_addr + curr_offset++;
 }
 
-void *Block::get_reference_of(int offset) {
+void *Block::get_reference_of(unsigned int offset) {
     return memory + (offset * struct_size);
 }
 
 
 MemoryAllocator::MemoryAllocator(int size) {
-    struct_size = size;
-    structs_per_block = get_block_size(struct_size) / size;
+    struct_size = (unsigned int) size;
+    structs_per_block = get_block_size(struct_size) / struct_size;
     cout << "Struct Size " << struct_size << endl;
     cout << "Structs per Block " << structs_per_block << endl;
     next_block_addr = 1;
@@ -92,10 +92,10 @@ Block *MemoryAllocator::addBlock() {
  * Gets optimal minimal block size based upon multiples
  * of struct and pointer sizes in bytes.
  */
-int MemoryAllocator::get_block_size(int struct_size) {
-    int pointer_size = sizeof(void *);
+unsigned int MemoryAllocator::get_block_size(unsigned int struct_size) {
+    unsigned int pointer_size = sizeof(void *);
     struct_size *= 1024;
-    int lcm = (struct_size > pointer_size) ? struct_size : pointer_size;
+    unsigned int lcm = (struct_size > pointer_size) ? struct_size : pointer_size;
 
     do {
         if (lcm % struct_size == 0 && lcm % pointer_size == 0) {
