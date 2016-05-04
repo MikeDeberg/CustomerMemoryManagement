@@ -8,6 +8,8 @@
 #include "optimized_trie.h"
 //#include "memmg.h"
 
+#define QUERY_CAP 10000
+
 using namespace std;
 
 
@@ -79,7 +81,7 @@ int main(int argc, char **argv) {
         cout << "Starting unoptimized Trie search..." << endl;
         search_start = clock();
         //Begin search portion
-        while( queries.get(x) ) {
+        for(int i = 1; queries.get(x) && i < QUERY_CAP; i++) {
             this_record = get_record(queries);
             prefix->search(this_record.sequence);
         }
@@ -102,7 +104,7 @@ int main(int argc, char **argv) {
         cout << "Starting unoptimized Trie search..." << endl;
         search_start = clock();
         //Begin search portion
-        while( queries.get(x) ) {
+        for(int i = 1; queries.get(x) && i < QUERY_CAP; i++) {
             this_record = get_record(queries);
             prefix->search(this_record.sequence);
         }
