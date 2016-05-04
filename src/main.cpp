@@ -1,11 +1,14 @@
 #include <iostream>
 #include <fstream>
+#include <ctime>
 
 // Project Specific
 #include "definitions.h"
 #include "trie.h"
 #include "optimized_trie.h"
 //#include "memmg.h"
+
+#define QUERY_CAP 10000
 
 using namespace std;
 
@@ -41,49 +44,81 @@ int main(int argc, char **argv) {
             optimized = true;
         }
     }
-    // creating input stream for handling FASTA file
-    ifstream ifs;
-    // opening input FASTA file
+
+    ifstream ifs;      // input stream for handling FASTA file
+    ifstream queries;  // stream for queries; pointed at the same file as ifs
+
     ifs.open (argv[1], ifstream::in);
+    queries.open (argv[1], ifstream::in);
+
+
+    //Declaration of start time
+    clock_t construction_start;
+    clock_t construction_time;
+    clock_t search_start;
+    clock_t search_time;
+
+    //Declare record struct and char for end of file probe
+    record this_record;
+    char x;
 
     // if the trie is to use the custom memory manager
     if (optimized){
+        cout << "Starting optimized Trie construction..." << endl;
         memmg = new MemoryAllocator(sizeof(MEMMG_TYPE));
 
+        //Begin Construction Portion
+        construction_start = clock(); //start time initialiazation
         OptTrie *prefix = new OptTrie();
-
-        // creating record struct and char for end of file probe
-        record this_record;
-        char x;
-
         // while there is another character in the FASTA file
-        while( ifs.get(x)) {
+        while( ifs.get(x) ) {
             // retrieve one record from FASTA file
             this_record = get_record(ifs);
             prefix->add(this_record.sequence);
-            // cout << "Prefix Length: " << prefix->get_size() << "\n";
         }
-        cout << "Trie Assembly Complete" << endl;
+        construction_time = clock() - construction_start;
 
+        cout << "Starting unoptimized Trie search..." << endl;
+        search_start = clock();
+        //Begin search portion
+        for(int i = 1; queries.get(x) && i < QUERY_CAP; i++) {
+            this_record = get_record(queries);
+            prefix->search(this_record.sequence);
+        }
+        search_time = clock() - search_start;
     }
 
     // if the trie is NOT to use the custom memory manager
     if(!optimized){
+        cout << "Starting unoptimized Trie construction..." << endl;
+        construction_start = clock(); //start time initialiazation
         Trie *prefix = new Trie();
-
-        // creating record struct and char for end of file probe
-        record this_record;
-        char x;
-
         // while there is another character in the FASTA file
         while( ifs.get(x)) {
             // retrieve one record from FASTA file
             this_record = get_record(ifs);
             prefix->add(this_record.sequence);
-            // cout << "Prefix Length: " << prefix->get_size() << endl;
         }
-        cout << "Trie Assembly Complete" << endl;
+        construction_time = clock() - construction_start;
+
+        cout << "Starting unoptimized Trie search..." << endl;
+        search_start = clock();
+        //Begin search portion
+        for(int i = 1; queries.get(x) && i < QUERY_CAP; i++) {
+            this_record = get_record(queries);
+            prefix->search(this_record.sequence);
+        }
+        search_time = clock() - search_start;
     }
+
+    cout << "Trie construction completed in "
+         << 1000 * (construction_time / CLOCKS_PER_SEC)
+         << "ms." << endl;
+
+    cout << "Trie search completed in "
+         << 1000 * (construction_time / CLOCKS_PER_SEC)
+         << "ms." << endl;
+
     ifs.close();
 
     return 0;
