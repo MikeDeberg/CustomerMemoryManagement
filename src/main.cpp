@@ -47,32 +47,39 @@ int main(int argc, char **argv) {
     // opening input FASTA file
     ifs.open (argv[1], ifstream::in);
 
+
     //Declaration of start time
     clock_t construction_start;
+
+    //Declare record struct and char for end of file probe
+    record this_record;
+    char x;
+
     // if the trie is to use the custom memory manager
     if (optimized){
         cout << "Starting optimized Trie construction..." << endl;
         memmg = new MemoryAllocator(sizeof(MEMMG_TYPE));
         construction_start = clock(); //start time initialiazation
         OptTrie *prefix = new OptTrie();
+        // while there is another character in the FASTA file
+        while( ifs.get(x)) {
+            // retrieve one record from FASTA file
+            this_record = get_record(ifs);
+            prefix->add(this_record.sequence);
+        }
     }
+
     // if the trie is NOT to use the custom memory manager
     if(!optimized){
         cout << "Starting unoptimized Trie construction..." << endl;
         construction_start = clock(); //start time initialiazation
         Trie *prefix = new Trie();
-    }
-
-    // creating record struct and char for end of file probe
-    record this_record;
-    char x;
-
-    // while there is another character in the FASTA file
-    while( ifs.get(x)) {
-        // retrieve one record from FASTA file
-        this_record = get_record(ifs);
-        prefix->add(this_record.sequence);
-        // cout << "Prefix Length: " << prefix->get_size() << "\n";
+        // while there is another character in the FASTA file
+        while( ifs.get(x)) {
+            // retrieve one record from FASTA file
+            this_record = get_record(ifs);
+            prefix->add(this_record.sequence);
+        }
     }
 
     clock_t construction_time = construction_start - clock();
