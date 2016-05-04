@@ -47,53 +47,39 @@ int main(int argc, char **argv) {
     // opening input FASTA file
     ifs.open (argv[1], ifstream::in);
 
+    //Declaration of start time
+    clock_t construction_start;
     // if the trie is to use the custom memory manager
     if (optimized){
         cout << "Starting optimized Trie construction..." << endl;
-        clock_t construction_start = clock();
         memmg = new MemoryAllocator(sizeof(MEMMG_TYPE));
-
+        construction_start = clock(); //start time initialiazation
         OptTrie *prefix = new OptTrie();
-
-        // creating record struct and char for end of file probe
-        record this_record;
-        char x;
-
-        // while there is another character in the FASTA file
-        while( ifs.get(x)) {
-            // retrieve one record from FASTA file
-            this_record = get_record(ifs);
-            prefix->add(this_record.sequence);
-            // cout << "Prefix Length: " << prefix->get_size() << "\n";
-        }
-        clock_t construction_time = construction_start - clock();
-        cout << "Trie construction completed in "
-             << 1000 * (construction_time / CLOCKS_PER_SEC)
-             << "ms." << endl;
     }
-
     // if the trie is NOT to use the custom memory manager
     if(!optimized){
         cout << "Starting unoptimized Trie construction..." << endl;
-        clock_t construction_start = clock();
+        construction_start = clock(); //start time initialiazation
         Trie *prefix = new Trie();
-
-        // creating record struct and char for end of file probe
-        record this_record;
-        char x;
-
-        // while there is another character in the FASTA file
-        while( ifs.get(x)) {
-            // retrieve one record from FASTA file
-            this_record = get_record(ifs);
-            prefix->add(this_record.sequence);
-            // cout << "Prefix Length: " << prefix->get_size() << endl;
-        }
-        clock_t construction_time = construction_start - clock();
-        cout << "Trie construction completed in "
-             << 1000 * (construction_time / CLOCKS_PER_SEC)
-             << "ms." << endl;
     }
+
+    // creating record struct and char for end of file probe
+    record this_record;
+    char x;
+
+    // while there is another character in the FASTA file
+    while( ifs.get(x)) {
+        // retrieve one record from FASTA file
+        this_record = get_record(ifs);
+        prefix->add(this_record.sequence);
+        // cout << "Prefix Length: " << prefix->get_size() << "\n";
+    }
+
+    clock_t construction_time = construction_start - clock();
+    cout << "Trie construction completed in "
+         << 1000 * (construction_time / CLOCKS_PER_SEC)
+         << "ms." << endl;
+
     ifs.close();
 
     return 0;
