@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <ctime>
 
 // Project Specific
 #include "definitions.h"
@@ -48,6 +49,8 @@ int main(int argc, char **argv) {
 
     // if the trie is to use the custom memory manager
     if (optimized){
+        cout << "Starting optimized Trie construction..." << endl;
+        clock_t construction_start = clock();
         memmg = new MemoryAllocator(sizeof(MEMMG_TYPE));
 
         OptTrie *prefix = new OptTrie();
@@ -63,12 +66,16 @@ int main(int argc, char **argv) {
             prefix->add(this_record.sequence);
             // cout << "Prefix Length: " << prefix->get_size() << "\n";
         }
-        cout << "Trie Assembly Complete" << endl;
-
+        clock_t construction_time = construction_start - clock();
+        cout << "Trie construction completed in "
+             << 1000 * (construction_time / CLOCKS_PER_SEC)
+             << "ms." << endl;
     }
 
     // if the trie is NOT to use the custom memory manager
     if(!optimized){
+        cout << "Starting unoptimized Trie construction..." << endl;
+        clock_t construction_start = clock();
         Trie *prefix = new Trie();
 
         // creating record struct and char for end of file probe
@@ -82,7 +89,10 @@ int main(int argc, char **argv) {
             prefix->add(this_record.sequence);
             // cout << "Prefix Length: " << prefix->get_size() << endl;
         }
-        cout << "Trie Assembly Complete" << endl;
+        clock_t construction_time = construction_start - clock();
+        cout << "Trie construction completed in "
+             << 1000 * (construction_time / CLOCKS_PER_SEC)
+             << "ms." << endl;
     }
     ifs.close();
 
